@@ -19,6 +19,7 @@
 #include "application/motor.h"
 #include "gpio.h"
 #include "pwm.h"
+#include "adc.h"
 
 const TickType_t xDelay = 100 / portTICK_PERIOD_MS;
 TaskHandle_t handle_cc = NULL;
@@ -26,13 +27,14 @@ TaskHandle_t handle_cc = NULL;
 void app_main(void)
 {
 
-      PWM_init();
+    PWM_init();
+    adc_init();
 
-      printf("Minimum free heap size: %" PRIu32 " bytes\n", esp_get_minimum_free_heap_size());
-      xTaskCreate(cc_driver, "CC_motor", 2048, NULL, 10, &handle_cc);
+    printf("Minimum free heap size: %" PRIu32 " bytes\n", esp_get_minimum_free_heap_size());
+    xTaskCreate(cc_driver, "CC_motor", 2048, NULL, 10, &handle_cc);
 
-      while (1)
-      {
-            vTaskDelay(xDelay);
-      }
+    while (1)
+    {
+        vTaskDelay(xDelay);
+    }
 }

@@ -10,5 +10,8 @@ Also build a H bridge to control the motors.
 - Motor 1 (front) - forward: 25, backward: 26
 - Motor 2 (back) - forward: 14, backward: 13
 
+### ADC Pins
+- ADC2_4: pin 20
+
 ## H Bridge
 ![H Bridge](hbridge.png)

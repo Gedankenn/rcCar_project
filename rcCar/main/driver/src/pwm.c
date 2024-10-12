@@ -1,15 +1,6 @@
 #include "pwm.h"
-#include "driver/ledc.h"
 
-#define LEDC_TIMER              LEDC_TIMER_0
-#define LEDC_MODE               LEDC_HIGH_SPEED_MODE
-#define LEDC_OUTPUT_IO_1        25  // Define the output GPIO for PWM on pin 25
-#define LEDC_OUTPUT_IO_2        26  // Define the output GPIO for PWM on pin 26
-#define LEDC_CHANNEL_1          LEDC_CHANNEL_0
-#define LEDC_CHANNEL_2          LEDC_CHANNEL_1
-#define LEDC_DUTY_RES           LEDC_TIMER_13_BIT  // Resolution of PWM duty
-#define LEDC_DUTY               4000               // Duty cycle (0-8191 for 13-bit)
-#define LEDC_FREQUENCY          5000               // Frequency in Hertz. Set frequency at 5 kHz
+
 
 void PWM_init(void)
 {
@@ -28,7 +19,7 @@ void PWM_init(void)
     // Prepare and initialize configuration for the LEDC channel (GPIO 25)
     ledc_channel_config_t ledc_channel_1 = {
         .speed_mode     = LEDC_MODE,
-        .channel        = LEDC_CHANNEL_1,
+        .channel        = FOWARD,
         .timer_sel      = LEDC_TIMER,
         .intr_type      = LEDC_INTR_DISABLE,
         .gpio_num       = LEDC_OUTPUT_IO_1,
@@ -39,7 +30,7 @@ void PWM_init(void)
     // Set configuration of the LEDC channel (GPIO 26)
     ledc_channel_config_t ledc_channel_2 = {
         .speed_mode     = LEDC_MODE,
-        .channel        = LEDC_CHANNEL_2,
+        .channel        = BACKWARD,
         .timer_sel      = LEDC_TIMER,
         .intr_type      = LEDC_INTR_DISABLE,
         .gpio_num       = LEDC_OUTPUT_IO_2,
@@ -52,17 +43,20 @@ void PWM_init(void)
     ledc_channel_config(&ledc_channel_2);
 
     // Set duty cycle for GPIO 25
-    ledc_set_duty(LEDC_MODE, LEDC_CHANNEL_1, LEDC_DUTY);
-    ledc_update_duty(LEDC_MODE, LEDC_CHANNEL_1);
+    ledc_set_duty(LEDC_MODE, FOWARD, LEDC_DUTY);
+    ledc_update_duty(LEDC_MODE, FOWARD);
 
     // Set duty cycle for GPIO 26
-    ledc_set_duty(LEDC_MODE, LEDC_CHANNEL_2, LEDC_DUTY);
-    ledc_update_duty(LEDC_MODE, LEDC_CHANNEL_2);
+    ledc_set_duty(LEDC_MODE, BACKWARD, LEDC_DUTY);
+    ledc_update_duty(LEDC_MODE, BACKWARD);
 
 }
 
 void update_duty_cicle(int duty, int channel)
 {
+    // Set duty cycle for GPIO 25
+    // duty = 0-8191 for 13-bit
+    
     ledc_set_duty(LEDC_MODE, channel, duty);
     ledc_update_duty(LEDC_MODE, channel);
 }
