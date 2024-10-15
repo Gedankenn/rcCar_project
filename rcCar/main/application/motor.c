@@ -12,14 +12,16 @@ void update_motor_speed()
     {
         int duty = (reading - 2048) * 8191 / 2047;
         printf("Duty: %d on FOWARD\n", duty);
-        update_duty_cicle(duty, FOWARD);
         update_duty_cicle(0, BACKWARD);
+        vTaskDelay(xDelay/10);
+        update_duty_cicle(duty, FOWARD);
     }
     else
     {
         int duty = (2048 - reading) * 8191 / 2047;
         printf("Duty: %d on BACKWARD\n", duty);
         update_duty_cicle(0, FOWARD);
+        vTaskDelay(xDelay/10);
         update_duty_cicle(duty, BACKWARD);
     }
 
