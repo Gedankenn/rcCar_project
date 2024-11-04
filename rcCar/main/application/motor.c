@@ -4,42 +4,28 @@
 
 #define xDelay 1000 / portTICK_PERIOD_MS
 
-void update_motor_speed()
-{
-    // Update motor speed
-    int reading = adc_read();
-    if (reading >= 2048)
-    {
-        int duty = (reading - 2048) * 8191 / 2047;
-        printf("Duty: %d on FOWARD\n", duty);
-        update_duty_cicle(0, BACKWARD);
-        vTaskDelay(xDelay/10);
-        update_duty_cicle(duty, FOWARD);
-    }
-    else
-    {
-        int duty = (2048 - reading) * 8191 / 2047;
-        printf("Duty: %d on BACKWARD\n", duty);
-        update_duty_cicle(0, FOWARD);
-        vTaskDelay(xDelay/10);
-        update_duty_cicle(duty, BACKWARD);
-    }
-
-}
+#define LEDC_TIMER              LEDC_TIMER_0
+#define LEDC_MODE               LEDC_HIGH_SPEED_MODE
+#define PINA                    25  // Define the output GPIO for PWM on pin 25
+#define PINB                    26  // Define the output GPIO for PWM on pin 26
+#define FOWARD                  LEDC_CHANNEL_0
+#define BACKWARD                LEDC_CHANNEL_1
+#define LEDC_DUTY_RES           LEDC_TIMER_13_BIT  // Resolution of PWM duty
+#define LEDC_DUTY               4000               // Duty cycle (0-8191 for 13-bit)
+#define LEDC_FREQUENCY          5000               // Frequency in Hertz. Set frequency at 5 kHz
 
 void cc_driver(void *args)
 {
-    float adc_value;
+    int adc_raw;
     printf("Motor driver\n");
     while (1)
     {
         printf("Motor running\n");
-        adc_value = adc_read();
+        adc_raw = adc1_read(PINA);
         // Convert adc to voltage
         // float voltage = adc_value * 3.3 / 4095;
-        float voltage = adc_value * 3.3 / 4095;
-        printf("ADC value: %2f Voltage: %2f\n", adc_value, voltage);
-        update_motor_speed();
+        float voltage = adc_raw * 3.3 / 4095;
+        printf("ADC value: %d Voltage: %2f\n", adc_raw, voltage);
         vTaskDelay(xDelay);
     }
 }

@@ -6,18 +6,8 @@
 **/
 
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <inttypes.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/queue.h"
-#include <math.h>
-#include "esp_timer.h"
-#include "esp_attr.h"
-
 #include "application/motor.h"
-#include "gpio.h"
+
 #include "pwm.h"
 #include "adc.h"
 
@@ -26,10 +16,7 @@ TaskHandle_t handle_cc = NULL;
 
 void app_main(void)
 {
-
-    PWM_init();
-    adc_init();
-
+    adc1_init(); 
     printf("Minimum free heap size: %" PRIu32 " bytes\n", esp_get_minimum_free_heap_size());
     xTaskCreate(cc_driver, "CC_motor", 2048, NULL, 10, &handle_cc);
 
